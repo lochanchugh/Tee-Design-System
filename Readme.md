@@ -8,83 +8,83 @@
 
 ### Core Colors
 
-| Token             | Value   | Usage                                 |
-| ----------------- | ------- | ------------------------------------- |
-| background        | #FFFFFF | Main background                       |
-| onBackground      | #000000 | Text/icons on background              |
-| primary           | #4D7993 | Brand actions, key buttons            |
-| onPrimary         | #FFFFFF | Text/icons on primary                 |
-| primaryContainer  | #CCE7F0 | Primary tinted backgrounds            |
-| onPrimaryContainer| #1A4A5C | Text on primary containers            |
-| secondary         | #F3F3F3 | Secondary surfaces                    |
-| onSecondary       | #000000 | Text/icons on secondary               |
-| tertiary          | #EDEDED | Subtle accent UI                      |
-| onTertiary        | #000000 | Text/icons on tertiary                |
-| surface           | #FFFFFF | Cards, sheets, elevated surfaces      |
-| onSurface         | #000000 | Text/icons on surface                 |
-| surfaceVariant    | #F8F8F8 | Section backgrounds                   |
-| onSurfaceVariant  | #6E6E6E | Secondary text/icons                  |
-| surfaceTint       | #4D7993 | Elevation tint color                  |
-| inverseSurface    | #000000 | Dark surfaces (e.g., banners)         |
-| onInverseSurface  | #FFFFFF | Text/icons on dark surfaces           |
+| Token             | Light Value | Dark Value | Usage                                 |
+| ----------------- | ----------- | ---------- | ------------------------------------- |
+| background        | #FFFFFF     | #121212    | Main background                       |
+| onBackground      | #000000     | #FFFFFF    | Text/icons on background              |
+| primary           | #4D7993     | #4D7993    | Brand actions, key buttons            |
+| onPrimary         | #FFFFFF     | #FFFFFF    | Text/icons on primary                 |
+| primaryContainer  | #CCE7F0     | #395A64    | Primary tinted backgrounds            |
+| onPrimaryContainer| #1A4A5C     | #E1F5FE    | Text on primary containers            |
+| secondary         | #F3F3F3     | #1E1E1E    | Secondary surfaces                    |
+| onSecondary       | #000000     | #FFFFFF    | Text/icons on secondary               |
+| tertiary          | #EDEDED     | #2C2C2C    | Subtle accent UI                      |
+| onTertiary        | #000000     | #FFFFFF    | Text/icons on tertiary                |
+| surface           | #FFFFFF     | #1E1E1E    | Cards, sheets, elevated surfaces      |
+| onSurface         | #000000     | #FFFFFF    | Text/icons on surface                 |
+| surfaceVariant    | #F8F8F8     | #2A2A2A    | Section backgrounds                   |
+| onSurfaceVariant  | #6E6E6E     | #B0B0B0    | Secondary text/icons                  |
+| surfaceTint       | #4D7993     | #4D7993    | Elevation tint color                  |
+| inverseSurface    | #000000     | #FFFFFF    | Dark surfaces (e.g., banners)         |
+| onInverseSurface  | #FFFFFF     | #000000    | Text/icons on dark surfaces           |
 
 ### State Colors
 
-| Token              | Value   | Usage                   |
-| ------------------ | ------- | ----------------------- |
-| primaryHover       | #436A80 | Primary hover state     |
-| primaryPressed     | #3A5B6E | Primary pressed state   |
-| primaryFocus       | #5B8AA8 | Primary focus state     |
-| secondaryHover     | #E6E6E6 | Secondary hover state   |
-| secondaryPressed   | #D9D9D9 | Secondary pressed state |
-| secondaryFocus     | #F0F0F0 | Secondary focus state   |
-| disabledBackground | #E0E0E0 | Disabled button bg      |
-| disabledText       | #A1A1A1 | Disabled text/icons     |
-| errorHover         | #C23939 | Hover state for errors  |
-| successHover       | #256828 | Hover state for success |
-| infoHover          | #0270AA | Hover state for info    |
+| Token              | Light Value | Dark Value | Usage                   |
+| ------------------ | ----------- | ---------- | ----------------------- |
+| primaryHover       | #436A80     | #5A92A8    | Primary hover state     |
+| primaryPressed     | #3A5B6E     | #517F92    | Primary pressed state   |
+| primaryFocus       | #5B8AA8     | #5B8AA8    | Primary focus state     |
+| secondaryHover     | #E6E6E6     | #2D2D2D    | Secondary hover state   |
+| secondaryPressed   | #D9D9D9     | #3A3A3A    | Secondary pressed state |
+| secondaryFocus     | #F0F0F0     | #3D3D3D    | Secondary focus state   |
+| disabledBackground | #E0E0E0     | #3A3A3A    | Disabled button bg      |
+| disabledText       | #A1A1A1     | #777777    | Disabled text/icons     |
+| errorHover         | #C23939     | #E57373    | Hover state for errors  |
+| successHover       | #256828     | #81C784    | Hover state for success |
+| infoHover          | #0270AA     | #4FC3F7    | Hover state for info    |
 
 ### Borders & Dividers
 
-| Token   | Value   | Usage      |
-| ------- | ------- | ---------- |
-| outline | #D6D6D6 | Borders    |
-| divider | #EAEAEA | Separators |
+| Token   | Light Value | Dark Value | Usage      |
+| ------- | ----------- | ---------- | ---------- |
+| outline | #D6D6D6     | #444444    | Borders    |
+| divider | #EAEAEA     | #333333    | Separators |
 
 ### Semantic Colors
 
-| Token     | Value   | Usage                 |
-| --------- | ------- | --------------------- |
-| error     | #D93F3F | Error bg              |
-| onError   | #FFFFFF | Text/icons on error   |
-| warning   | #FFB020 | Warning bg            |
-| onWarning | #000000 | Text/icons on warning |
-| success   | #2E7D32 | Success bg            |
-| onSuccess | #FFFFFF | Text/icons on success |
-| info      | #0288D1 | Info bg               |
-| onInfo    | #FFFFFF | Text/icons on info    |
+| Token     | Light Value | Dark Value | Usage                 |
+| --------- | ----------- | ---------- | --------------------- |
+| error     | #D93F3F     | #E57373    | Error bg              |
+| onError   | #FFFFFF     | #000000    | Text/icons on error   |
+| warning   | #FFB020     | #FFD180    | Warning bg            |
+| onWarning | #000000     | #000000    | Text/icons on warning |
+| success   | #2E7D32     | #81C784    | Success bg            |
+| onSuccess | #FFFFFF     | #000000    | Text/icons on success |
+| info      | #0288D1     | #4FC3F7    | Info bg               |
+| onInfo    | #FFFFFF     | #000000    | Text/icons on info    |
 
 ### Overlays & Highlights
 
-| Token     | Value           | Usage               |
-| --------- | --------------- | ------------------- |
-| scrim     | rgba(0,0,0,0.4) | Modal overlay       |
-| highlight | #CCE7F0         | Selection highlight |
-| accent    | #FFD700         | Special emphasis    |
-| focusRing | #4D7993         | Keyboard focus ring |
+| Token     | Light Value     | Dark Value      | Usage               |
+| --------- | --------------- | --------------- | ------------------- |
+| scrim     | rgba(0,0,0,0.4) | rgba(0,0,0,0.6) | Modal overlay       |
+| highlight | #CCE7F0         | #395A64         | Selection highlight |
+| accent    | #FFD700         | #FFD54F         | Special emphasis    |
+| focusRing | #4D7993         | #4D7993         | Keyboard focus ring |
 
 ### Golf-Specific Overlays
 
-| Token         | Value   | Usage                  |
-| ------------- | ------- | ---------------------- |
-| severe        | #FF4C4C | High severity          |
-| moderate      | #FFA500 | Medium severity        |
-| reference     | #00CED1 | Reference marker       |
-| backswing     | #4B9CD3 | Backswing overlay      |
-| downswing     | #228B22 | Downswing overlay      |
-| followThrough | #9370DB | Follow-through overlay |
-| line          | #FFD700 | Swing path line        |
-| joint         | #FF69B4 | Joint markers          |
+| Token         | Light Value | Dark Value | Usage                  |
+| ------------- | ----------- | ---------- | ---------------------- |
+| severe        | #FF4C4C     | #FF6F6F    | High severity          |
+| moderate      | #FFA500     | #FFB74D    | Medium severity        |
+| reference     | #00CED1     | #4DD0E1    | Reference marker       |
+| backswing     | #4B9CD3     | #64B5F6    | Backswing overlay      |
+| downswing     | #228B22     | #66BB6A    | Downswing overlay      |
+| followThrough | #9370DB     | #B39DDB    | Follow-through overlay |
+| line          | #FFD700     | #FFEB3B    | Swing path line        |
+| joint         | #FF69B4     | #F48FB1    | Joint markers          |
 
 ### Opacity Guidelines
 
@@ -97,6 +97,7 @@
 | Focus overlays          | 12%     | More prominent than hover                |
 
 ---
+
 
 ## **2️⃣ Typography**
 
