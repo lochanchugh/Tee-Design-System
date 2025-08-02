@@ -587,14 +587,107 @@
     <script>
         class DesignSystemManager {
             constructor() {
-                this.currentData = this.getInitialData();
-                this.history = this.loadHistory();
+                this.currentData = null;
+                this.allVersions = [];
+                this.currentVersionId = null;
                 this.isEditMode = false;
                 this.hasChanges = false;
+                this.jsonFileName = 'design_system_data.json';
                 
                 this.initializeUI();
                 this.bindEvents();
+                this.loadFromJSON();
+            }
+
+            async loadFromJSON() {
+                try {
+                    // Try to read the JSON file
+                    const fileContent = await window.fs.readFile(this.jsonFileName, { encoding: 'utf8' });
+                    const parsedData = JSON.parse(fileContent);
+                    
+                    if (parsedData.versions && parsedData.versions.length > 0) {
+                        // Load existing versions
+                        this.allVersions = parsedData.versions;
+                        // Find current version or use the latest
+                        const currentVersion = this.allVersions.find(v => v.isCurrent) || this.allVersions[this.allVersions.length - 1];
+                        this.currentVersionId = currentVersion.id;
+                        this.currentData = currentVersion.designSystem;
+                    } else if (parsedData.designSystem) {
+                        // Legacy format - convert to new versioned format
+                        this.convertLegacyFormat(parsedData);
+                    } else {
+                        throw new Error('Invalid JSON format');
+                    }
+                    
+                    this.showNotification('Design system loaded successfully!', 'success');
+                } catch (error) {
+                    console.warn('Could not load from JSON file, using default data:', error);
+                    this.initializeWithDefaults();
+                }
+                
                 this.renderContent();
+            }
+
+            convertLegacyFormat(legacyData) {
+                // Convert old format to new versioned format
+                this.allVersions = [{
+                    id: 1,
+                    version: "1.0.0",
+                    timestamp: legacyData.lastUpdated || new Date().toISOString(),
+                    designSystem: legacyData.designSystem,
+                    summary: 'Migrated from legacy format',
+                    isCurrent: true,
+                    author: 'System Migration'
+                }];
+                this.currentVersionId = 1;
+                this.currentData = legacyData.designSystem;
+            }
+
+            initializeWithDefaults() {
+                this.currentData = this.getInitialData();
+                this.allVersions = [{
+                    id: 1,
+                    version: "1.0.0",
+                    timestamp: new Date().toISOString(),
+                    designSystem: this.currentData,
+                    summary: 'Initial design system',
+                    isCurrent: true,
+                    author: 'Design System Manager'
+                }];
+                this.currentVersionId = 1;
+            }
+
+            async saveToJSON() {
+                try {
+                    const jsonData = {
+                        metadata: {
+                            name: "TEE Golf Design System",
+                            description: "Complete design system for golf applications",
+                            lastUpdated: new Date().toISOString(),
+                            totalVersions: this.allVersions.length
+                        },
+                        versions: this.allVersions,
+                        currentVersion: this.currentVersionId
+                    };
+
+                    const jsonString = JSON.stringify(jsonData, null, 2);
+                    
+                    // Create a downloadable file
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = this.jsonFileName;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    
+                    this.showNotification('Design system saved to JSON!', 'success');
+                    return true;
+                } catch (error) {
+                    console.error('Error saving to JSON:', error);
+                    this.showNotification('Error saving to JSON file', 'error');
+                    return false;
+                }
             }
 
             getInitialData() {
@@ -776,22 +869,23 @@
                 };
             }
 
-            loadHistory() {
-                const stored = localStorage.getItem('golf-history');
-                if (stored) {
-                    return JSON.parse(stored);
-                }
-                return [{
-                    id: 1,
-                    timestamp: new Date().toISOString(),
-                    data: this.currentData,
-                    summary: 'Initial design system',
-                    isCurrent: true
-                }];
-            }
-
-            saveHistory() {
-                localStorage.setItem('golf-history', JSON.stringify(this.history));
+            generateVersionNumber() {
+                // Auto-generate semantic version based on existing versions
+                const versions = this.allVersions.map(v => v.version);
+                const latest = versions.sort((a, b) => {
+                    const aParts = a.split('.').map(Number);
+                    const bParts = b.split('.').map(Number);
+                    for (let i = 0; i < 3; i++) {
+                        if (aParts[i] !== bParts[i]) return bParts[i] - aParts[i];
+                    }
+                    return 0;
+                })[0];
+                
+                if (!latest) return "1.0.0";
+                
+                const parts = latest.split('.').map(Number);
+                parts[2]++; // Increment patch version
+                return parts.join('.');
             }
 
             initializeUI() {
@@ -831,6 +925,8 @@
             }
 
             renderContent() {
+                if (!this.currentData) return;
+                
                 this.renderColors();
                 this.renderTypography();
                 this.renderSpacing();
@@ -1053,27 +1149,36 @@
                 document.getElementById('saveBtn').disabled = false;
             }
 
-            saveChanges() {
-                // Create new history entry
-                const newEntry = {
-                    id: this.history.length + 1,
+            async saveChanges() {
+                const summaryPrompt = prompt('Enter a summary for this version:', `Updated at ${new Date().toLocaleString()}`);
+                if (summaryPrompt === null) return; // User cancelled
+                
+                // Create new version entry
+                const newVersion = {
+                    id: this.allVersions.length + 1,
+                    version: this.generateVersionNumber(),
                     timestamp: new Date().toISOString(),
-                    data: JSON.parse(JSON.stringify(this.currentData)),
-                    summary: `Updated at ${new Date().toLocaleString()}`,
-                    isCurrent: true
+                    designSystem: JSON.parse(JSON.stringify(this.currentData)),
+                    summary: summaryPrompt || `Updated at ${new Date().toLocaleString()}`,
+                    isCurrent: true,
+                    author: 'Design System Manager'
                 };
 
-                // Mark previous entries as not current
-                this.history.forEach(entry => entry.isCurrent = false);
+                // Mark previous versions as not current
+                this.allVersions.forEach(version => version.isCurrent = false);
                 
-                // Add to history
-                this.history.push(newEntry);
-                this.saveHistory();
+                // Add to versions array
+                this.allVersions.push(newVersion);
+                this.currentVersionId = newVersion.id;
                 
-                this.hasChanges = false;
-                document.getElementById('saveBtn').disabled = true;
+                // Save to JSON
+                const saveSuccess = await this.saveToJSON();
                 
-                this.showNotification('Changes saved successfully!', 'success');
+                if (saveSuccess) {
+                    this.hasChanges = false;
+                    document.getElementById('saveBtn').disabled = true;
+                    this.showNotification(`Version ${newVersion.version} saved successfully!`, 'success');
+                }
             }
 
             toggleHistory() {
@@ -1089,75 +1194,109 @@
                 const container = document.getElementById('historyContent');
                 container.innerHTML = '';
                 
-                // Sort history by timestamp, newest first
-                const sortedHistory = [...this.history].sort((a, b) => 
+                // Sort versions by timestamp, newest first
+                const sortedVersions = [...this.allVersions].sort((a, b) =>
                     new Date(b.timestamp) - new Date(a.timestamp)
                 );
                 
-                sortedHistory.forEach(entry => {
+                sortedVersions.forEach(version => {
                     const item = document.createElement('div');
-                    item.className = `history-item ${entry.isCurrent ? 'current' : ''}`;
+                    item.className = `history-item ${version.isCurrent ? 'current' : ''}`;
                     
                     const meta = document.createElement('div');
                     meta.className = 'history-meta';
-                    meta.textContent = `Version ${entry.id} • ${new Date(entry.timestamp).toLocaleString()}`;
+                    meta.textContent = `v${version.version} • ${new Date(version.timestamp).toLocaleString()} • ${version.author}`;
                     
                     const summary = document.createElement('div');
                     summary.className = 'history-summary';
-                    summary.textContent = entry.summary;
+                    summary.textContent = version.summary;
                     
                     item.appendChild(meta);
                     item.appendChild(summary);
                     
-                    if (!entry.isCurrent) {
-                        item.addEventListener('click', () => this.restoreVersion(entry));
+                    if (!version.isCurrent) {
+                        item.addEventListener('click', () => this.restoreVersion(version));
+                        item.style.cursor = 'pointer';
+                        item.title = 'Click to restore this version';
+                    } else {
+                        item.title = 'Current version';
                     }
                     
                     container.appendChild(item);
                 });
             }
 
-            restoreVersion(entry) {
+            async restoreVersion(version) {
                 if (this.hasChanges) {
                     if (!confirm('You have unsaved changes. Are you sure you want to restore this version?')) {
                         return;
                     }
                 }
                 
-                this.currentData = JSON.parse(JSON.stringify(entry.data));
-                this.history.forEach(h => h.isCurrent = false);
-                entry.isCurrent = true;
+                // Create a restoration entry
+                const restorationVersion = {
+                    id: this.allVersions.length + 1,
+                    version: this.generateVersionNumber(),
+                    timestamp: new Date().toISOString(),
+                    designSystem: JSON.parse(JSON.stringify(version.designSystem)),
+                    summary: `Restored from v${version.version}`,
+                    isCurrent: true,
+                    author: 'Design System Manager',
+                    restoredFrom: version.id
+                };
+                
+                this.currentData = JSON.parse(JSON.stringify(version.designSystem));
+                this.allVersions.forEach(v => v.isCurrent = false);
+                this.allVersions.push(restorationVersion);
+                this.currentVersionId = restorationVersion.id;
                 
                 this.hasChanges = false;
                 document.getElementById('saveBtn').disabled = true;
                 
+                // Auto-save the restoration
+                await this.saveToJSON();
+                
                 this.renderContent();
                 this.renderHistory();
-                this.showNotification(`Restored to version ${entry.id}`, 'success');
+                this.showNotification(`Restored to v${version.version}`, 'success');
             }
 
-            exportData() {
-                const dataStr = JSON.stringify(this.currentData, null, 2);
+            async exportData() {
+                const exportData = {
+                    metadata: {
+                        name: "TEE Golf Design System Export",
+                        description: "Complete design system export with all versions",
+                        exportDate: new Date().toISOString(),
+                        totalVersions: this.allVersions.length,
+                        currentVersion: this.currentVersionId
+                    },
+                    currentDesignSystem: this.currentData,
+                    allVersions: this.allVersions
+                };
+                
+                const dataStr = JSON.stringify(exportData, null, 2);
                 const dataBlob = new Blob([dataStr], { type: 'application/json' });
                 
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(dataBlob);
-                link.download = `golf-design-system-${new Date().toISOString().split('T')[0]}.json`;
+                link.download = `golf-design-system-export-${new Date().toISOString().split('T')[0]}.json`;
                 link.click();
+                URL.revokeObjectURL(link.href);
                 
-                this.showNotification('Design system exported!', 'success');
+                this.showNotification('Design system exported with all versions!', 'success');
             }
 
-            resetToInitial() {
-                if (!confirm('This will reset the design system to its initial state. Are you sure?')) {
+            async resetToInitial() {
+                if (!confirm('This will create a new version with the initial design system. Are you sure?')) {
                     return;
                 }
                 
                 this.currentData = this.getInitialData();
                 this.hasChanges = true;
+                document.getElementById('saveBtn').disabled = false;
                 this.renderContent();
                 
-                this.showNotification('Reset to initial design system', 'success');
+                this.showNotification('Reset to initial design system - remember to save!', 'info');
             }
 
             showNotification(message, type = 'info') {
@@ -1168,13 +1307,79 @@
                 
                 setTimeout(() => {
                     notification.classList.remove('show');
-                }, 3000);
+                }, 4000);
+            }
+
+            // Import functionality for uploaded JSON files
+            async importFromFile(file) {
+                try {
+                    const text = await file.text();
+                    const importedData = JSON.parse(text);
+                    
+                    if (importedData.versions && importedData.versions.length > 0) {
+                        // Import all versions
+                        if (confirm('This will import all versions from the file. Continue?')) {
+                            this.allVersions = importedData.versions;
+                            const currentVersion = this.allVersions.find(v => v.isCurrent) || this.allVersions[this.allVersions.length - 1];
+                            this.currentVersionId = currentVersion.id;
+                            this.currentData = currentVersion.designSystem;
+                            this.renderContent();
+                            this.showNotification('Design system imported successfully!', 'success');
+                        }
+                    } else if (importedData.designSystem || importedData.currentDesignSystem) {
+                        // Import single version
+                        const designSystem = importedData.designSystem || importedData.currentDesignSystem;
+                        const newVersion = {
+                            id: this.allVersions.length + 1,
+                            version: this.generateVersionNumber(),
+                            timestamp: new Date().toISOString(),
+                            designSystem: designSystem,
+                            summary: 'Imported from file',
+                            isCurrent: true,
+                            author: 'Import'
+                        };
+                        
+                        this.allVersions.forEach(v => v.isCurrent = false);
+                        this.allVersions.push(newVersion);
+                        this.currentVersionId = newVersion.id;
+                        this.currentData = designSystem;
+                        this.renderContent();
+                        this.showNotification('Design system imported as new version!', 'success');
+                    } else {
+                        throw new Error('Invalid file format');
+                    }
+                } catch (error) {
+                    console.error('Import error:', error);
+                    this.showNotification('Error importing file: ' + error.message, 'error');
+                }
             }
 
             // Add new items functionality
-            addNewItem(section) {
+            addNewItem(section, subsection = null) {
                 const newItem = this.getEmptyItem(section);
-                this.currentData[section].push(newItem);
+                
+                if (subsection && this.currentData[section][subsection]) {
+                    this.currentData[section][subsection].push(newItem);
+                } else if (Array.isArray(this.currentData[section])) {
+                    this.currentData[section].push(newItem);
+                } else {
+                    console.error('Cannot add item to section:', section);
+                    return;
+                }
+                
+                this.markChanged();
+                this.renderContent();
+            }
+
+            removeItem(section, index, subsection = null) {
+                if (!confirm('Are you sure you want to remove this item?')) return;
+                
+                if (subsection && this.currentData[section][subsection]) {
+                    this.currentData[section][subsection].splice(index, 1);
+                } else if (Array.isArray(this.currentData[section])) {
+                    this.currentData[section].splice(index, 1);
+                }
+                
                 this.markChanged();
                 this.renderContent();
             }
@@ -1188,10 +1393,34 @@
                     'elevation': { token: 'new-shadow', shadow: '0 1px 3px rgba(0,0,0,0.12)', usage: 'New shadow usage' },
                     'motion': { token: 'new-motion', value: '250ms', usage: 'New motion usage' },
                     'icons': { token: 'new-icon', size: '20px', usage: 'New icon usage' },
-                    'components': { component: 'NewComponent', property: 'Property', value: 'Value', notes: 'Notes' }
+                    'components': { component: 'NewComponent', property: 'Property', value: 'Value', notes: 'Notes' },
+                    'breakpoints': { token: 'new-breakpoint', value: '768px', usage: 'New breakpoint' },
+                    'zIndex': { token: 'new-z', value: '1000', usage: 'New z-index layer' }
                 };
                 
                 return templates[section] || {};
+            }
+
+            // Utility method to get current version info
+            getCurrentVersionInfo() {
+                const currentVersion = this.allVersions.find(v => v.id === this.currentVersionId);
+                return currentVersion || null;
+            }
+
+            // Method to compare versions
+            compareVersions(versionId1, versionId2) {
+                const version1 = this.allVersions.find(v => v.id === versionId1);
+                const version2 = this.allVersions.find(v => v.id === versionId2);
+                
+                if (!version1 || !version2) return null;
+                
+                // This is a basic implementation - you could expand this to show detailed diffs
+                return {
+                    version1: version1,
+                    version2: version2,
+                    timesDifferent: version1.timestamp !== version2.timestamp,
+                    summariesDifferent: version1.summary !== version2.summary
+                };
             }
         }
 
@@ -1207,6 +1436,37 @@
                 e.returnValue = '';
             }
         });
+
+        // Add file drop functionality for importing
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type === 'application/json') {
+                if (window.designSystem) {
+                    window.designSystem.importFromFile(files[0]);
+                }
+            }
+        });
+
+        // Add file input for importing (you can add this button to the UI)
+        function createImportButton() {
+            const importBtn = document.createElement('input');
+            importBtn.type = 'file';
+            importBtn.accept = '.json';
+            importBtn.style.display = 'none';
+            importBtn.addEventListener('change', (e) => {
+                if (e.target.files.length > 0 && window.designSystem) {
+                    window.designSystem.importFromFile(e.target.files[0]);
+                }
+            });
+            document.body.appendChild(importBtn);
+            
+            return () => importBtn.click();
+        }
     </script>
 </body>
 </html>
