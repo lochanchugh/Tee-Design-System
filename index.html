@@ -598,6 +598,15 @@
             }
 
             getInitialData() {
+                try {
+                    const response = await fetch('history.json');
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.designSystem;
+                    }
+                } catch (e) {
+                    console.log('Using default design system data');
+                }
                 return {
                     colors: {
                         core: [
@@ -791,7 +800,16 @@
             }
 
             saveHistory() {
+                const fullData = {
+                    version: "1.0.0", // You might want to increment this
+                    lastUpdated: new Date().toISOString(),
+                    designSystem: this.currentData,
+                    guidelines: this.guidelines // You might want to add this
+                };
                 localStorage.setItem('golf-history', JSON.stringify(this.history));
+                
+                // Also save to a JSON file if you're using server-side storage
+                this.exportToJsonFile(fullData);
             }
 
             initializeUI() {
