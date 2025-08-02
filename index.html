@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏌️ TEE Design System Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Core Colors */
+            --background: #FFFFFF;
+            --on-background: #000000;
+            --primary: #4D7993;
+            --on-primary: #FFFFFF;
+            --primary-container: #CCE7F0;
+            --on-primary-container: #1A4A5C;
+            --secondary: #F3F3F3;
+            --on-secondary: #000000;
+            --tertiary: #EDEDED;
+            --on-tertiary: #000000;
+            --surface: #FFFFFF;
+            --on-surface: #000000;
+            --surface-variant: #F8F8F8;
+            --on-surface-variant: #6E6E6E;
+            --surface-tint: #4D7993;
+            --inverse-surface: #000000;
+            --on-inverse-surface: #FFFFFF;
+            --outline: #D6D6D6;
+            --divider: #EAEAEA;
+            
+            /* State Colors */
+            --primary-hover: #436A80;
+            --primary-pressed: #3A5B6E;
+            --primary-focus: #5B8AA8;
+            --secondary-hover: #E6E6E6;
+            --secondary-pressed: #D9D9D9;
+            --secondary-focus: #F0F0F0;
+            --disabled-background: #E0E0E0;
+            --disabled-text: #A1A1A1;
+            --error-hover: #C23939;
+            --success-hover: #256828;
+            --info-hover: #0270AA;
+            
+            /* Semantic Colors */
+            --error: #D93F3F;
+            --on-error: #FFFFFF;
+            --warning: #FFB020;
+            --on-warning: #000000;
+            --success: #2E7D32;
+            --on-success: #FFFFFF;
+            --info: #0288D1;
+            --on-info: #FFFFFF;
+            
+            /* Overlays & Highlights */
+            --scrim: rgba(0,0,0,0.4);
+            --highlight: #CCE7F0;
+            --accent: #FFD700;
+            --focus-ring: #4D7993;
+            
+            /* Golf-Specific Colors */
+            --severe: #FF4C4C;
+            --moderate: #FFA500;
+            --reference: #00CED1;
+            --backswing: #4B9CD3;
+            --downswing: #228B22;
+            --follow-through: #9370DB;
+            --line: #FFD700;
+            --joint: #FF69B4;
+            
+            /* Spacing */
+            --spacing-0: 0px;
+            --spacing-1: 4px;
+            --spacing-1.5: 6px;
+            --spacing-2: 8px;
+            --spacing-3: 12px;
+            --spacing-4: 16px;
+            --spacing-5: 20px;
+            --spacing-6: 24px;
+            --spacing-7: 28px;
+            --spacing-8: 32px;
+            --spacing-10: 40px;
+            --spacing-12: 48px;
+            
+            /* Radius */
+            --radius-xs: 2px;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-xxl: 24px;
+            --radius-pill: 999px;
+            
+            /* Shadows */
+            --shadow-0: none;
+            --shadow-1: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-2: 0 4px 6px rgba(0,0,0,0.16);
+            --shadow-3: 0 8px 12px rgba(0,0,0,0.20);
+            --shadow-4: 0 12px 18px rgba(0,0,0,0.24);
+            --shadow-5: 0 16px 24px rgba(0,0,0,0.28);
+            --shadow-inset: inset 0 2px 4px rgba(0,0,0,0.1);
+            
+            /* Motion */
+            --duration-fast: 150ms;
+            --duration-medium: 250ms;
+            --duration-slow: 350ms;
+            
+            /* Icons */
+            --icon-sm: 16px;
+            --icon-md: 20px;
+            --icon-lg: 24px;
+            --icon-xl: 32px;
+            
+            /* Z-Index */
+            --z-base: 0;
+            --z-dropdown: 1000;
+            --z-sticky: 1100;
+            --z-modal: 2000;
+            --z-popover: 2100;
+            --z-toast: 3000;
+            --z-tooltip: 3100;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--on-background);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-6);
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary);
+            color: var(--on-primary);
+            padding: var(--spacing-6) 0;
+            margin-bottom: var(--spacing-8);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: var(--spacing-3);
+        }
+
+        .header p {
+            text-align: center;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* Controls */
+        .controls {
+            background: var(--surface);
+            padding: var(--spacing-6);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-1);
+            margin-bottom: var(--spacing-8);
+            display: flex;
+            gap: var(--spacing-4);
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: var(--spacing-3) var(--spacing-5);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--on-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-2);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--on-secondary);
+            border: 1px solid var(--outline);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-hover);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: var(--error-hover);
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: var(--surface-variant);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-1);
+        }
+
+        .mode-toggle button {
+            padding: var(--spacing-2) var(--spacing-4);
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-toggle button.active {
+            background: var(--primary);
+            color: var(--on-primary);
+            box-shadow: var(--shadow-1);
+        }
+
+        /* History Panel */
+        .history-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: var(--surface);
+            box-shadow: var(--shadow-3);
+            transition: right 0.3s ease;
+            z-index: var(--z-modal);
+            overflow-y: auto;
+        }
+
+        .history-panel.open {
+            right: 0;
+        }
+
+        .history-header {
+            padding: var(--spacing-6);
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .history-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: var(--spacing-2);
+        }
+
+        .history-item {
+            padding: var(--spacing-4);
+            border-bottom: 1px solid var(--divider);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .history-item:hover {
+            background: var(--surface-variant);
+        }
+
+        .history-item.current {
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+        }
+
+        .history-meta {
+            font-size: 0.85rem;
+            color: var(--on-surface-variant);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .history-summary {
+            font-weight: 500;
+        }
+
+        /* Content Area */
+        .content {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-1);
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--surface-variant);
+            border-bottom: 1px solid var(--divider);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: var(--spacing-4) var(--spacing-6);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--primary-container);
+        }
+
+        .tab.active {
+            background: var(--surface);
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tab-content {
+            padding: var(--spacing-6);
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: var(--spacing-4) 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-1);
+        }
+
+        th, td {
+            padding: var(--spacing-3) var(--spacing-4);
+            text-align: left;
+            border-bottom: 1px solid var(--divider);
+        }
+
+        th {
+            background: var(--surface-variant);
+            font-weight: 600;
+            color: var(--on-surface-variant);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:hover {
+            background: var(--surface-variant);
+        }
+
+        .editable {
+            background: transparent;
+            border: 1px solid transparent;
+            padding: var(--spacing-2);
+            border-radius: var(--radius-sm);
+            width: 100%;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .editable:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 2px rgba(77, 121, 147, 0.2);
+        }
+
+        .color-preview {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--outline);
+            display: inline-block;
+            margin-right: var(--spacing-2);
+        }
+
+        /* Section Headers */
+        .section-header {
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+            padding: var(--spacing-4) var(--spacing-6);
+            margin: var(--spacing-6) -var(--spacing-6) var(--spacing-4) -var(--spacing-6);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-4);
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .history-panel {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .tabs {
+                flex-wrap: nowrap;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: var(--spacing-2) var(--spacing-3);
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: var(--spacing-8);
+            color: var(--on-surface-variant);
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--outline);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: var(--spacing-2);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: var(--spacing-6);
+            right: var(--spacing-6);
+            background: var(--primary);
+            color: var(--on-primary);
+            padding: var(--spacing-4) var(--spacing-6);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-3);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: var(--z-toast);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🏌️ Tee Design System Manager</h1>
+            <p>Complete design system with live editing and version history</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="controls">
+            <div class="mode-toggle">
+                <button id="viewMode" class="active">👁️ View Mode</button>
+                <button id="editMode">✏️ Edit Mode</button>
+            </div>
+            
+            <div style="display: flex; gap: var(--spacing-3); flex-wrap: wrap;">
+                <button class="btn btn-primary" id="saveBtn" disabled>💾 Save Changes</button>
+                <button class="btn btn-secondary" id="historyBtn">📜 History</button>
+                <button class="btn btn-secondary" id="exportBtn">📤 Export</button>
+                <button class="btn btn-danger" id="resetBtn">🔄 Reset</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" data-tab="colors">🎨 Colors</button>
+                <button class="tab" data-tab="typography">📝 Typography</button>
+                <button class="tab" data-tab="spacing">📏 Spacing</button>
+                <button class="tab" data-tab="shapes">🔺 Shapes</button>
+                <button class="tab" data-tab="elevation">🌟 Elevation</button>
+                <button class="tab" data-tab="motion">⚡ Motion</button>
+                <button class="tab" data-tab="icons">🎯 Icons</button>
+                <button class="tab" data-tab="components">📦 Components</button>
+            </div>
+
+            <div id="colors" class="tab-content active">
+                <div class="section-header">Color System</div>
+                <div id="colorsContent"></div>
+            </div>
+
+            <div id="typography" class="tab-content">
+                <div class="section-header">Typography System</div>
+                <div id="typographyContent"></div>
+            </div>
+
+            <div id="spacing" class="tab-content">
+                <div class="section-header">Spacing & Layout</div>
+                <div id="spacingContent"></div>
+            </div>
+
+            <div id="shapes" class="tab-content">
+                <div class="section-header">Shape & Corners</div>
+                <div id="shapesContent"></div>
+            </div>
+
+            <div id="elevation" class="tab-content">
+                <div class="section-header">Elevation & Shadows</div>
+                <div id="elevationContent"></div>
+            </div>
+
+            <div id="motion" class="tab-content">
+                <div class="section-header">Motion & Animation</div>
+                <div id="motionContent"></div>
+            </div>
+
+            <div id="icons" class="tab-content">
+                <div class="section-header">Iconography</div>
+                <div id="iconsContent"></div>
+            </div>
+
+            <div id="components" class="tab-content">
+                <div class="section-header">Component Defaults</div>
+                <div id="componentsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Panel -->
+    <div class="history-panel" id="historyPanel">
+        <div class="history-header">
+            <h3>📜 Version History</h3>
+            <p>Click on any version to restore it</p>
+            <button class="btn btn-secondary" id="closeHistory" style="margin-top: var(--spacing-3);">✕ Close</button>
+        </div>
+        <div id="historyContent"></div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        class DesignSystemManager {
+            constructor() {
+                this.currentData = this.getInitialData();
+                this.history = this.loadHistory();
+                this.isEditMode = false;
+                this.hasChanges = false;
+                
+                this.initializeUI();
+                this.bindEvents();
+                this.renderContent();
+            }
+
+            getInitialData() {
+                return {
+                    colors: {
+                        core: [
+                            { token: 'background', value: '#FFFFFF', usage: 'Main background' },
+                            { token: 'onBackground', value: '#000000', usage: 'Text/icons on background' },
+                            { token: 'primary', value: '#4D7993', usage: 'Brand actions, key buttons' },
+                            { token: 'onPrimary', value: '#FFFFFF', usage: 'Text/icons on primary' },
+                            { token: 'primaryContainer', value: '#CCE7F0', usage: 'Primary tinted backgrounds' },
+                            { token: 'onPrimaryContainer', value: '#1A4A5C', usage: 'Text on primary containers' },
+                            { token: 'secondary', value: '#F3F3F3', usage: 'Secondary surfaces' },
+                            { token: 'onSecondary', value: '#000000', usage: 'Text/icons on secondary' },
+                            { token: 'tertiary', value: '#EDEDED', usage: 'Subtle accent UI' },
+                            { token: 'onTertiary', value: '#000000', usage: 'Text/icons on tertiary' },
+                            { token: 'surface', value: '#FFFFFF', usage: 'Cards, sheets, elevated surfaces' },
+                            { token: 'onSurface', value: '#000000', usage: 'Text/icons on surface' },
+                            { token: 'surfaceVariant', value: '#F8F8F8', usage: 'Section backgrounds' },
+                            { token: 'onSurfaceVariant', value: '#6E6E6E', usage: 'Secondary text/icons' },
+                            { token: 'surfaceTint', value: '#4D7993', usage: 'Elevation tint color' },
+                            { token: 'inverseSurface', value: '#000000', usage: 'Dark surfaces (e.g., banners)' },
+                            { token: 'onInverseSurface', value: '#FFFFFF', usage: 'Text/icons on dark surfaces' }
+                        ],
+                        state: [
+                            { token: 'primaryHover', value: '#436A80', usage: 'Primary hover state' },
+                            { token: 'primaryPressed', value: '#3A5B6E', usage: 'Primary pressed state' },
+                            { token: 'primaryFocus', value: '#5B8AA8', usage: 'Primary focus state' },
+                            { token: 'secondaryHover', value: '#E6E6E6', usage: 'Secondary hover state' },
+                            { token: 'secondaryPressed', value: '#D9D9D9', usage: 'Secondary pressed state' },
+                            { token: 'secondaryFocus', value: '#F0F0F0', usage: 'Secondary focus state' },
+                            { token: 'disabledBackground', value: '#E0E0E0', usage: 'Disabled button bg' },
+                            { token: 'disabledText', value: '#A1A1A1', usage: 'Disabled text/icons' },
+                            { token: 'errorHover', value: '#C23939', usage: 'Hover state for errors' },
+                            { token: 'successHover', value: '#256828', usage: 'Hover state for success' },
+                            { token: 'infoHover', value: '#0270AA', usage: 'Hover state for info' }
+                        ],
+                        semantic: [
+                            { token: 'error', value: '#D93F3F', usage: 'Error bg' },
+                            { token: 'onError', value: '#FFFFFF', usage: 'Text/icons on error' },
+                            { token: 'warning', value: '#FFB020', usage: 'Warning bg' },
+                            { token: 'onWarning', value: '#000000', usage: 'Text/icons on warning' },
+                            { token: 'success', value: '#2E7D32', usage: 'Success bg' },
+                            { token: 'onSuccess', value: '#FFFFFF', usage: 'Text/icons on success' },
+                            { token: 'info', value: '#0288D1', usage: 'Info bg' },
+                            { token: 'onInfo', value: '#FFFFFF', usage: 'Text/icons on info' }
+                        ],
+                        borders: [
+                            { token: 'outline', value: '#D6D6D6', usage: 'Borders' },
+                            { token: 'divider', value: '#EAEAEA', usage: 'Separators' }
+                        ],
+                        overlays: [
+                            { token: 'scrim', value: 'rgba(0,0,0,0.4)', usage: 'Modal overlay' },
+                            { token: 'highlight', value: '#CCE7F0', usage: 'Selection highlight' },
+                            { token: 'accent', value: '#FFD700', usage: 'Special emphasis' },
+                            { token: 'focusRing', value: '#4D7993', usage: 'Keyboard focus ring' }
+                        ],
+                        golf: [
+                            { token: 'severe', value: '#FF4C4C', usage: 'High severity' },
+                            { token: 'moderate', value: '#FFA500', usage: 'Medium severity' },
+                            { token: 'reference', value: '#00CED1', usage: 'Reference marker' },
+                            { token: 'backswing', value: '#4B9CD3', usage: 'Backswing overlay' },
+                            { token: 'downswing', value: '#228B22', usage: 'Downswing overlay' },
+                            { token: 'followThrough', value: '#9370DB', usage: 'Follow-through overlay' },
+                            { token: 'line', value: '#FFD700', usage: 'Swing path line' },
+                            { token: 'joint', value: '#FF69B4', usage: 'Joint markers' }
+                        ]
+                    },
+                    typography: [
+                        { role: 'display-lg', font: 'Move Display', weight: 'Bold', size: '44px', lineHeight: '52px', notes: 'Hero text, splashes' },
+                        { role: 'h1', font: 'Move Display', weight: 'Bold', size: '36px', lineHeight: '44px', notes: 'Main headers' },
+                        { role: 'h2', font: 'Move Display', weight: 'Bold', size: '28px', lineHeight: '36px', notes: 'Secondary headers' },
+                        { role: 'h3', font: 'Move Display', weight: 'Medium', size: '22px', lineHeight: '28px', notes: 'Section headers' },
+                        { role: 'subtitle', font: 'Move Text', weight: 'Medium', size: '20px', lineHeight: '28px', notes: 'Optional header tier' },
+                        { role: 'body-lg', font: 'Move Text', weight: 'Regular', size: '18px', lineHeight: '28px', notes: 'Paragraphs' },
+                        { role: 'body-md', font: 'Move Text', weight: 'Regular', size: '16px', lineHeight: '24px', notes: 'Default text' },
+                        { role: 'body-sm', font: 'Move Text', weight: 'Regular', size: '14px', lineHeight: '20px', notes: 'Supporting info' },
+                        { role: 'label-md', font: 'Move Text', weight: 'Medium', size: '14px', lineHeight: '20px', notes: 'Buttons, tabs' },
+                        { role: 'label-sm', font: 'Move Text', weight: 'Medium', size: '12px', lineHeight: '16px', notes: 'Captions' },
+                        { role: 'caption', font: 'Move Text', weight: 'Regular', size: '10px', lineHeight: '14px', notes: 'Fine print, metadata' },
+                        { role: 'overline', font: 'Move Text', weight: 'Medium', size: '10px', lineHeight: '14px', notes: 'Section identifiers' },
+                        { role: 'stat-value', font: 'Move Display', weight: 'Bold', size: '24px', lineHeight: '32px', notes: 'Golf stats emphasis' },
+                        { role: 'stat-label', font: 'Move Text', weight: 'Medium', size: '12px', lineHeight: '16px', notes: 'Golf stat captions' }
+                    ],
+                    spacing: [
+                        { token: 'spacing-0', value: '0px', usage: 'Reset margins' },
+                        { token: 'spacing-1', value: '4px', usage: 'Icon-text gap' },
+                        { token: 'spacing-1.5', value: '6px', usage: 'Micro adjustments' },
+                        { token: 'spacing-2', value: '8px', usage: 'Compact padding' },
+                        { token: 'spacing-3', value: '12px', usage: 'Small gaps' },
+                        { token: 'spacing-4', value: '16px', usage: 'Standard unit' },
+                        { token: 'spacing-5', value: '20px', usage: 'Medium gaps' },
+                        { token: 'spacing-6', value: '24px', usage: 'Section spacing' },
+                        { token: 'spacing-7', value: '28px', usage: 'Large gaps' },
+                        { token: 'spacing-8', value: '32px', usage: 'Major sections' },
+                        { token: 'spacing-10', value: '40px', usage: 'Extra large' },
+                        { token: 'spacing-12', value: '48px', usage: 'Charts, hero areas' }
+                    ],
+                    shapes: [
+                        { token: 'radius-xs', radius: '2px', usage: 'Subtle borders, micro interactions' },
+                        { token: 'radius-sm', radius: '4px', usage: 'Chips, tags, small icons' },
+                        { token: 'radius-md', radius: '8px', usage: 'Buttons, standard cards' },
+                        { token: 'radius-lg', radius: '12px', usage: 'Modals, large cards, elevated containers' },
+                        { token: 'radius-xl', radius: '16px', usage: 'Drawers, banners, large overlays' },
+                        { token: 'radius-xxl', radius: '24px', usage: 'Special large rounded areas' },
+                        { token: 'radius-pill', radius: '999px', usage: 'Full pill shape' }
+                    ],
+                    elevation: [
+                        { token: 'shadow-0', shadow: 'none', usage: 'Flat elements' },
+                        { token: 'shadow-1', shadow: '0 1px 3px rgba(0,0,0,0.12)', usage: 'Small cards' },
+                        { token: 'shadow-2', shadow: '0 4px 6px rgba(0,0,0,0.16)', usage: 'Floating buttons' },
+                        { token: 'shadow-3', shadow: '0 8px 12px rgba(0,0,0,0.20)', usage: 'Modals' },
+                        { token: 'shadow-4', shadow: '0 12px 18px rgba(0,0,0,0.24)', usage: 'High priority' },
+                        { token: 'shadow-5', shadow: '0 16px 24px rgba(0,0,0,0.28)', usage: 'Hero overlays' },
+                        { token: 'shadow-inset', shadow: 'inset 0 2px 4px rgba(0,0,0,0.1)', usage: 'Pressed states' }
+                    ],
+                    motion: [
+                        { token: 'fast', value: '150ms', usage: 'Hover effects, icon changes' },
+                        { token: 'medium', value: '250ms', usage: 'Button presses, tab switches' },
+                        { token: 'slow', value: '350ms', usage: 'Modal appearances, major state changes' }
+                    ],
+                    icons: [
+                        { token: 'icon-sm', size: '16px', usage: 'Inline with text' },
+                        { token: 'icon-md', size: '20px', usage: 'Standard buttons' },
+                        { token: 'icon-lg', size: '24px', usage: 'Large buttons, headers' },
+                        { token: 'icon-xl', size: '32px', usage: 'Feature icons, emphasis' }
+                    ],
+                    components: [
+                        { component: 'Button', property: 'Radius', value: 'radius-md (8px)', notes: 'Standard border radius' },
+                        { component: 'Button', property: 'Height', value: '48px', notes: '44px minimum touch target' },
+                        { component: 'Button', property: 'Padding', value: 'spacing-4 horizontal', notes: 'Standard padding' },
+                        { component: 'Button', property: 'Elevation', value: 'shadow-0 default, shadow-1 on hover', notes: 'Button shadows' },
+                        { component: 'Button', property: 'Variants', value: 'Primary, Secondary, Tertiary, Ghost, Icon-only, Destructive', notes: 'Available button types' },
+                        
+                        { component: 'Card', property: 'Radius', value: 'radius-md (8px) standard, radius-lg (12px) elevated', notes: 'Card corner radius' },
+                        { component: 'Card', property: 'Padding', value: 'spacing-4', notes: 'Internal spacing' },
+                        { component: 'Card', property: 'Elevation', value: 'shadow-1 default, shadow-2 interactive', notes: 'Card shadows' },
+                        { component: 'Card', property: 'Variants', value: 'Basic, Outlined, Interactive, Elevated, Metric (golf stats)', notes: 'Card types' },
+                        
+                        { component: 'Input', property: 'Radius', value: 'radius-md (8px)', notes: 'Input corner radius' },
+                        { component: 'Input', property: 'Height', value: '48px', notes: 'Standard input height' },
+                        { component: 'Input', property: 'Padding', value: 'spacing-3 internal', notes: 'Internal spacing' },
+                        { component: 'Input', property: 'Focus', value: '2px focusRing outline', notes: 'Focus state' },
+                        { component: 'Input', property: 'Types', value: 'Text, Textarea, Select, Search, Password, Slider, Stepper', notes: 'Input types' },
+                        
+                        { component: 'Navigation', property: 'Top App Bar', value: 'No radius, shadow-1', notes: 'Top navigation styling' },
+                        { component: 'Navigation', property: 'Bottom Navigation', value: 'radius-lg when floating, shadow-2', notes: 'Bottom navigation styling' },
+                        { component: 'Navigation', property: 'Tabs', value: 'radius-pill for pill-style, radius-md for segmented', notes: 'Tab styling' },
+                        
+                        { component: 'Feedback', property: 'Tooltips', value: 'radius-sm, shadow-2, max-width: 240px', notes: 'Tooltip styling' },
+                        { component: 'Feedback', property: 'Snackbars', value: 'radius-md, shadow-3, auto-dismiss 4-6s', notes: 'Snackbar styling' },
+                        { component: 'Feedback', property: 'Modals', value: 'radius-lg or radius-xl, shadow-3', notes: 'Modal styling' },
+                        
+                        { component: 'Data Display', property: 'Chips/Tags', value: 'radius-pill, dismissible with X icon', notes: 'Chip styling' },
+                        { component: 'Data Display', property: 'Badges', value: 'radius-pill, min-width: 20px', notes: 'Badge styling' },
+                        { component: 'Data Display', property: 'Progress', value: 'Circular or radius-pill linear', notes: 'Progress indicator types' },
+                        
+                        { component: 'Golf Components', property: 'Swing Analysis Overlays', value: 'radius-lg containers', notes: 'Swing analysis styling' },
+                        { component: 'Golf Components', property: 'Golf Stats Cards', value: 'radius-md, shadow-1', notes: 'Stats card styling' },
+                        { component: 'Golf Components', property: 'Leaderboard Tables', value: 'radius-md container, no radius on rows', notes: 'Leaderboard styling' },
+                        { component: 'Golf Components', property: 'Heatmaps', value: 'Embedded in radius-lg cards', notes: 'Heatmap styling' }
+                    ],
+                    breakpoints: [
+                        { token: 'sm', value: '640px', usage: 'Large mobile' },
+                        { token: 'md', value: '768px', usage: 'Tablet portrait' },
+                        { token: 'lg', value: '1024px', usage: 'Tablet landscape' },
+                        { token: 'xl', value: '1280px', usage: 'Desktop' },
+                        { token: '2xl', value: '1536px', usage: 'Large desktop' }
+                    ],
+                    zIndex: [
+                        { token: 'z-base', value: '0', usage: 'Default layer' },
+                        { token: 'z-dropdown', value: '1000', usage: 'Dropdowns, selects' },
+                        { token: 'z-sticky', value: '1100', usage: 'Sticky headers' },
+                        { token: 'z-modal', value: '2000', usage: 'Modals, dialogs' },
+                        { token: 'z-popover', value: '2100', usage: 'Tooltips, popovers' },
+                        { token: 'z-toast', value: '3000', usage: 'Notifications' },
+                        { token: 'z-tooltip', value: '3100', usage: 'Tooltips' }
+                    ]
+                };
+            }
+
+            loadHistory() {
+                const stored = localStorage.getItem('golf-history');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+                return [{
+                    id: 1,
+                    timestamp: new Date().toISOString(),
+                    data: this.currentData,
+                    summary: 'Initial design system',
+                    isCurrent: true
+                }];
+            }
+
+            saveHistory() {
+                localStorage.setItem('golf-history', JSON.stringify(this.history));
+            }
+
+            initializeUI() {
+                // Tab switching
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        
+                        tab.classList.add('active');
+                        document.getElementById(tab.dataset.tab).classList.add('active');
+                    });
+                });
+            }
+
+            bindEvents() {
+                // Mode toggle
+                document.getElementById('viewMode').addEventListener('click', () => this.setMode(false));
+                document.getElementById('editMode').addEventListener('click', () => this.setMode(true));
+                
+                // Action buttons
+                document.getElementById('saveBtn').addEventListener('click', () => this.saveChanges());
+                document.getElementById('historyBtn').addEventListener('click', () => this.toggleHistory());
+                document.getElementById('exportBtn').addEventListener('click', () => this.exportData());
+                document.getElementById('resetBtn').addEventListener('click', () => this.resetToInitial());
+                document.getElementById('closeHistory').addEventListener('click', () => this.toggleHistory());
+            }
+
+            setMode(isEdit) {
+                this.isEditMode = isEdit;
+                
+                document.getElementById('viewMode').classList.toggle('active', !isEdit);
+                document.getElementById('editMode').classList.toggle('active', isEdit);
+                document.getElementById('saveBtn').disabled = !isEdit || !this.hasChanges;
+                
+                this.renderContent();
+            }
+
+            renderContent() {
+                this.renderColors();
+                this.renderTypography();
+                this.renderSpacing();
+                this.renderShapes();
+                this.renderElevation();
+                this.renderMotion();
+                this.renderIcons();
+                this.renderComponents();
+            }
+
+            createTable(headers, data, keyMap) {
+                const table = document.createElement('table');
+                
+                // Create header
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+                
+                // Create body
+                const tbody = document.createElement('tbody');
+                data.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    keyMap.forEach(key => {
+                        const td = document.createElement('td');
+                        
+                        if (key === 'value' && item.value && item.value.startsWith('#')) {
+                            // Color preview
+                            const colorPreview = document.createElement('span');
+                            colorPreview.className = 'color-preview';
+                            colorPreview.style.backgroundColor = item.value;
+                            td.appendChild(colorPreview);
+                        }
+                        
+                        if (this.isEditMode && key !== 'usage' && key !== 'notes') {
+                            const input = document.createElement('input');
+                            input.className = 'editable';
+                            input.value = item[key] || '';
+                            input.addEventListener('input', () => {
+                                item[key] = input.value;
+                                this.markChanged();
+                            });
+                            td.appendChild(input);
+                        } else {
+                            td.textContent = item[key] || '';
+                        }
+                        
+                        row.appendChild(td);
+                    });
+                    tbody.appendChild(row);
+                });
+                table.appendChild(tbody);
+                
+                return table;
+            }
+
+            renderColors() {
+                const container = document.getElementById('colorsContent');
+                container.innerHTML = '';
+                
+                // Core Colors
+                const coreSection = document.createElement('div');
+                coreSection.innerHTML = '<h3 style="margin: var(--spacing-6) 0 var(--spacing-4) 0;">Core Colors</h3>';
+                const coreTable = this.createTable(
+                    ['Token', 'Value', 'Usage'],
+                    this.currentData.colors.core,
+                    ['token', 'value', 'usage']
+                );
+                coreSection.appendChild(coreTable);
+                
+                // State Colors
+                const stateSection = document.createElement('div');
+                stateSection.innerHTML = '<h3 style="margin: var(--spacing-6) 0 var(--spacing-4) 0;">State Colors</h3>';
+                const stateTable = this.createTable(
+                    ['Token', 'Value', 'Usage'],
+                    this.currentData.colors.state,
+                    ['token', 'value', 'usage']
+                );
+                stateSection.appendChild(stateTable);
+                
+                // Semantic Colors
+                const semanticSection = document.createElement('div');
+                semanticSection.innerHTML = '<h3 style="margin: var(--spacing-6) 0 var(--spacing-4) 0;">Semantic Colors</h3>';
+                const semanticTable = this.createTable(
+                    ['Token', 'Value', 'Usage'],
+                    this.currentData.colors.semantic,
+                    ['token', 'value', 'usage']
+                );
+                semanticSection.appendChild(semanticTable);
+                
+                // Borders & Dividers
+                const bordersSection = document.createElement('div');
+                bordersSection.innerHTML = '<h3 style="margin: var(--spacing-6) 0 var(--spacing-4) 0;">Borders & Dividers</h3>';
+                const bordersTable = this.createTable(
+                    ['Token', 'Value', 'Usage'],
+                    this.currentData.colors.borders,
+                    ['token', 'value', 'usage']
+                );
+                bordersSection.appendChild(bordersTable);
+                
+                // Overlays & Highlights
+                const overlaysSection = document.createElement('div');
+                overlaysSection.innerHTML = '<h3 style="margin: var(--spacing-6) 0 var(--spacing-4) 0;">Overlays & Highlights</h3>';
+                const overlaysTable = this.createTable(
+                    ['Token', 'Value', 'Usage'],
+                    this.currentData.colors.overlays,
+                    ['token', 'value', 'usage']
+                );
+                overlaysSection.appendChild(overlaysTable);
+                
+                // Golf-Specific Colors
+                const golfSection = document.createElement('div');
+                golfSection.innerHTML = '<h3 style="margin: var(--spacing-6) 0 var(--spacing-4) 0;">Golf-Specific Colors</h3>';
+                const golfTable = this.createTable(
+                    ['Token', 'Value', 'Usage'],
+                    this.currentData.colors.golf,
+                    ['token', 'value', 'usage']
+                );
+                golfSection.appendChild(golfTable);
+                
+                container.appendChild(coreSection);
+                container.appendChild(stateSection);
+                container.appendChild(semanticSection);
+                container.appendChild(bordersSection);
+                container.appendChild(overlaysSection);
+                container.appendChild(golfSection);
+            }
+
+            renderTypography() {
+                const container = document.getElementById('typographyContent');
+                container.innerHTML = '';
+                
+                const table = this.createTable(
+                    ['Role', 'Font', 'Weight', 'Size', 'Line Height', 'Notes'],
+                    this.currentData.typography,
+                    ['role', 'font', 'weight', 'size', 'lineHeight', 'notes']
+                );
+                container.appendChild(table);
+            }
+
+            renderSpacing() {
+                const container = document.getElementById('spacingContent');
+                container.innerHTML = '';
+                
+                const table = this.createTable(
+                    ['Token', 'Value', 'Usage'],
+                    this.currentData.spacing,
+                    ['token', 'value', 'usage']
+                );
+                container.appendChild(table);
+            }
+
+            renderShapes() {
+                const container = document.getElementById('shapesContent');
+                container.innerHTML = '';
+                
+                const table = this.createTable(
+                    ['Token', 'Radius', 'Usage'],
+                    this.currentData.shapes,
+                    ['token', 'radius', 'usage']
+                );
+                container.appendChild(table);
+            }
+
+            renderElevation() {
+                const container = document.getElementById('elevationContent');
+                container.innerHTML = '';
+                
+                const table = this.createTable(
+                    ['Token', 'Shadow', 'Usage'],
+                    this.currentData.elevation,
+                    ['token', 'shadow', 'usage']
+                );
+                container.appendChild(table);
+            }
+
+            renderMotion() {
+                const container = document.getElementById('motionContent');
+                container.innerHTML = '';
+                
+                const table = this.createTable(
+                    ['Token', 'Value', 'Usage'],
+                    this.currentData.motion,
+                    ['token', 'value', 'usage']
+                );
+                container.appendChild(table);
+            }
+
+            renderIcons() {
+                const container = document.getElementById('iconsContent');
+                container.innerHTML = '';
+                
+                const table = this.createTable(
+                    ['Token', 'Size', 'Usage'],
+                    this.currentData.icons,
+                    ['token', 'size', 'usage']
+                );
+                container.appendChild(table);
+            }
+
+            renderComponents() {
+                const container = document.getElementById('componentsContent');
+                container.innerHTML = '';
+                
+                const table = this.createTable(
+                    ['Component', 'Property', 'Value', 'Notes'],
+                    this.currentData.components,
+                    ['component', 'property', 'value', 'notes']
+                );
+                container.appendChild(table);
+            }
+
+            markChanged() {
+                this.hasChanges = true;
+                document.getElementById('saveBtn').disabled = false;
+            }
+
+            saveChanges() {
+                // Create new history entry
+                const newEntry = {
+                    id: this.history.length + 1,
+                    timestamp: new Date().toISOString(),
+                    data: JSON.parse(JSON.stringify(this.currentData)),
+                    summary: `Updated at ${new Date().toLocaleString()}`,
+                    isCurrent: true
+                };
+
+                // Mark previous entries as not current
+                this.history.forEach(entry => entry.isCurrent = false);
+                
+                // Add to history
+                this.history.push(newEntry);
+                this.saveHistory();
+                
+                this.hasChanges = false;
+                document.getElementById('saveBtn').disabled = true;
+                
+                this.showNotification('Changes saved successfully!', 'success');
+            }
+
+            toggleHistory() {
+                const panel = document.getElementById('historyPanel');
+                panel.classList.toggle('open');
+                
+                if (panel.classList.contains('open')) {
+                    this.renderHistory();
+                }
+            }
+
+            renderHistory() {
+                const container = document.getElementById('historyContent');
+                container.innerHTML = '';
+                
+                // Sort history by timestamp, newest first
+                const sortedHistory = [...this.history].sort((a, b) => 
+                    new Date(b.timestamp) - new Date(a.timestamp)
+                );
+                
+                sortedHistory.forEach(entry => {
+                    const item = document.createElement('div');
+                    item.className = `history-item ${entry.isCurrent ? 'current' : ''}`;
+                    
+                    const meta = document.createElement('div');
+                    meta.className = 'history-meta';
+                    meta.textContent = `Version ${entry.id} • ${new Date(entry.timestamp).toLocaleString()}`;
+                    
+                    const summary = document.createElement('div');
+                    summary.className = 'history-summary';
+                    summary.textContent = entry.summary;
+                    
+                    item.appendChild(meta);
+                    item.appendChild(summary);
+                    
+                    if (!entry.isCurrent) {
+                        item.addEventListener('click', () => this.restoreVersion(entry));
+                    }
+                    
+                    container.appendChild(item);
+                });
+            }
+
+            restoreVersion(entry) {
+                if (this.hasChanges) {
+                    if (!confirm('You have unsaved changes. Are you sure you want to restore this version?')) {
+                        return;
+                    }
+                }
+                
+                this.currentData = JSON.parse(JSON.stringify(entry.data));
+                this.history.forEach(h => h.isCurrent = false);
+                entry.isCurrent = true;
+                
+                this.hasChanges = false;
+                document.getElementById('saveBtn').disabled = true;
+                
+                this.renderContent();
+                this.renderHistory();
+                this.showNotification(`Restored to version ${entry.id}`, 'success');
+            }
+
+            exportData() {
+                const dataStr = JSON.stringify(this.currentData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `golf-design-system-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                this.showNotification('Design system exported!', 'success');
+            }
+
+            resetToInitial() {
+                if (!confirm('This will reset the design system to its initial state. Are you sure?')) {
+                    return;
+                }
+                
+                this.currentData = this.getInitialData();
+                this.hasChanges = true;
+                this.renderContent();
+                
+                this.showNotification('Reset to initial design system', 'success');
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+
+            // Add new items functionality
+            addNewItem(section) {
+                const newItem = this.getEmptyItem(section);
+                this.currentData[section].push(newItem);
+                this.markChanged();
+                this.renderContent();
+            }
+
+            getEmptyItem(section) {
+                const templates = {
+                    'colors': { token: 'new-token', value: '#000000', usage: 'New color usage' },
+                    'typography': { role: 'new-role', font: 'Move Text', weight: 'Regular', size: '16px', lineHeight: '24px', notes: 'New typography role' },
+                    'spacing': { token: 'new-spacing', value: '16px', usage: 'New spacing usage' },
+                    'shapes': { token: 'new-radius', radius: '8px', usage: 'New shape usage' },
+                    'elevation': { token: 'new-shadow', shadow: '0 1px 3px rgba(0,0,0,0.12)', usage: 'New shadow usage' },
+                    'motion': { token: 'new-motion', value: '250ms', usage: 'New motion usage' },
+                    'icons': { token: 'new-icon', size: '20px', usage: 'New icon usage' },
+                    'components': { component: 'NewComponent', property: 'Property', value: 'Value', notes: 'Notes' }
+                };
+                
+                return templates[section] || {};
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            window.designSystem = new DesignSystemManager();
+        });
+
+        // Handle page unload with unsaved changes
+        window.addEventListener('beforeunload', (e) => {
+            if (window.designSystem && window.designSystem.hasChanges) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>
